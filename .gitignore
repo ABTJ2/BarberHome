@@ -1,0 +1,3 @@
+application/logs/log-*.php
+application/cache/sessions/*
+!application/cache/sessions/.gitkeep

@@ -1,1 +1,68 @@
-<div class="heading"><div><h1><?= $user && !empty($user['id'])?'Editar usuario':'Nuevo usuario' ?></h1><p>Recepcionista o Encargado.</p></div></div><?php if($errors): ?><div class="errors"><ul><?php foreach($errors as $e): ?><li><?= h($e) ?></li><?php endforeach; ?></ul></div><?php endif; ?><section class="card" style="max-width:850px"><?= form_open($user && !empty($user['id'])?'usuarios/actualizar/'.$user['id']:'usuarios/guardar') ?><div class="formgrid"><div class="field"><label class="required">Nombre</label><input class="input" name="full_name" value="<?= h($user['full_name']??'') ?>" required></div><div class="field"><label class="required">Usuario</label><input class="input" name="username" value="<?= h($user['username']??'') ?>" required></div><div class="field"><label><?= $user && !empty($user['id'])?'Nueva contraseña (opcional)':'Contraseña' ?></label><input class="input" type="password" name="password" <?= !$user?'required':'' ?>></div><div class="field"><label class="required">Perfil</label><select name="role_id" required><?php foreach($roles as $r): ?><option value="<?= $r['id'] ?>" <?= ($user['role_id']??'')==$r['id']?'selected':'' ?>><?= h($r['name']) ?></option><?php endforeach; ?></select></div></div><label class="check" style="margin-top:14px"><input type="checkbox" name="active" value="1" <?= !isset($user['active'])||$user['active']?'checked':'' ?>> Usuario activo</label><div class="form-actions"><a class="btn" href="<?= site_url('usuarios') ?>">Cancelar</a><button class="btn primary" type="submit">Guardar usuario</button></div><?= form_close() ?></section>
+<?php
+// La misma vista sirve para el alta y para la edición: si el usuario ya tiene
+// id, el formulario guarda los cambios; si no, lo crea.
+$es_edicion = $user && !empty($user['id']);
+?>
+<div class="heading">
+    <div>
+        <h1><?= $es_edicion ? 'Editar usuario' : 'Nuevo usuario' ?></h1>
+        <p>Recepcionista o Encargado.</p>
+    </div>
+</div>
+
+<?php if ($errors): ?>
+    <div class="errors">
+        <ul>
+            <?php foreach ($errors as $error): ?>
+                <li><?= h($error) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+<?php endif; ?>
+
+<section class="card" style="max-width:850px">
+
+    <?= form_open($es_edicion ? 'usuarios/actualizar/' . $user['id'] : 'usuarios/guardar') ?>
+
+        <div class="formgrid">
+            <div class="field">
+                <label class="required">Nombre</label>
+                <input class="input" name="full_name" value="<?= h($user['full_name'] ?? '') ?>" required>
+            </div>
+
+            <div class="field">
+                <label class="required">Usuario</label>
+                <input class="input" name="username" value="<?= h($user['username'] ?? '') ?>" required>
+            </div>
+
+            <div class="field">
+                <label><?= $es_edicion ? 'Nueva contraseña (opcional)' : 'Contraseña' ?></label>
+                <input class="input" type="password" name="password" <?= !$user ? 'required' : '' ?>>
+            </div>
+
+            <div class="field">
+                <label class="required">Perfil</label>
+                <select name="role_id" required>
+                    <?php foreach ($roles as $rol): ?>
+                        <option value="<?= $rol['id'] ?>" <?= ($user['role_id'] ?? '') == $rol['id'] ? 'selected' : '' ?>>
+                            <?= h($rol['name']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+
+        <label class="check" style="margin-top:14px">
+            <input type="checkbox" name="active" value="1"
+                <?= !isset($user['active']) || $user['active'] ? 'checked' : '' ?>>
+            Usuario activo
+        </label>
+
+        <div class="form-actions">
+            <a class="btn" href="<?= site_url('usuarios') ?>">Cancelar</a>
+            <button class="btn primary" type="submit">Guardar usuario</button>
+        </div>
+
+    <?= form_close() ?>
+
+</section>

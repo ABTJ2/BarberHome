@@ -2,9 +2,37 @@
 /** Barber House - Front controller for CodeIgniter 3.1.13 */
 // Apache/PHP y MySQL deben usar el mismo día local para agenda y contabilidad.
 date_default_timezone_set('America/Argentina/Buenos_Aires');
-define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
-if (ENVIRONMENT === 'development') { error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT); ini_set('display_errors', 1); }
-else { error_reporting(0); ini_set('display_errors', 0); }
+
+/*
+ * Entorno de ejecución.
+ *
+ * - development: muestra los errores en pantalla y guarda todo en el log.
+ * - production: no muestra errores de PHP en pantalla y guarda solo errores.
+ *
+ * Para publicar el sistema hay que cambiar 'development' por 'production' en la
+ * línea de abajo, nada más. El runner de pruebas (tools/pruebas/router.php)
+ * manda CI_ENV=test por línea de comandos, así que el entorno solo se puede
+ * forzar de esa forma cuando PHP corre por consola.
+ */
+$entorno = 'development';
+
+if (PHP_SAPI === 'cli' || PHP_SAPI === 'cli-server') {
+    $entorno = isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : $entorno;
+}
+
+if (!in_array($entorno, array('development', 'test', 'production'), TRUE)) {
+    $entorno = 'development';
+}
+
+define('ENVIRONMENT', $entorno);
+
+if (ENVIRONMENT === 'development') {
+    error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+    ini_set('display_errors', '1');
+} else {
+    error_reporting(0);
+    ini_set('display_errors', '0');
+}
 $system_path = 'system';
 $application_folder = 'application';
 $view_folder = '';

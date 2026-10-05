@@ -18,7 +18,9 @@ $config['controller_trigger'] = 'c';
 $config['function_trigger'] = 'm';
 $config['directory_trigger'] = 'd';
 $config['allow_get_array'] = TRUE;
-$config['log_threshold'] = 1;
+// Mientras se programa interesa guardar todos los mensajes para depurar; en
+// producción solo interesan los errores (0 = nada, 1 = errores, 4 = todo).
+$config['log_threshold'] = ENVIRONMENT === 'development' ? 4 : 1;
 $config['log_path'] = '';
 $config['log_file_extension'] = '';
 $config['log_file_permissions'] = 0644;
